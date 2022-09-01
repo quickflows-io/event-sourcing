@@ -1,0 +1,6 @@
+[workspace]
+members = [
+    "event-sourcing",
+    "event-sourcing-postgres",
+    "event-sourcing-pulsar",
+]
