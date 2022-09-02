@@ -1,19 +1,16 @@
-use crate::event::Event;
-
-#[derive(Debug, Clone)]
-enum EventStoreError {
-    OptimisticLockingError,
-    InfrastructureError(&'static str),
-}
+use crate::event::envelope::EventEnvelope;
+use serde::de::DeserializeOwned;
+use serde::Serialize;
+use std::error::Error;
 
 #[async_trait::async_trait]
-pub trait EventStore {
-    async fn read<Data: Send + Sync + Clone>(
+pub trait EventStore: Sized + Send + Sync + Clone {
+    async fn read<Data: Send + Sync + Clone + Serialize + DeserializeOwned>(
         &self,
-        aggregate_id: Self::ID,
-    ) -> Result<Vec<Event<Data>>, EventStoreError>;
-    async fn persist<Data: Send + Sync + Clone>(
+        aggregate_id: &String,
+    ) -> Result<Vec<EventEnvelope<Data>>, Box<dyn Error + Send + Sync>>;
+    async fn persist<Data: Send + Sync + Clone + Serialize + DeserializeOwned>(
         &self,
-        event: Event<Data>,
-    ) -> Result<(), EventStoreError>;
+        event_envelope: EventEnvelope<Data>,
+    ) -> Result<(), Box<dyn Error + Send + Sync>>;
 }

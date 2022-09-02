@@ -1,0 +1,25 @@
+###
+POST http://localhost:8000/bank/account
+Content-Type: application/json
+
+{
+  "id": "e69798e0-a964-4ca5-b526-ad0eb9f00896"
+}
+
+###
+POST http://localhost:8000/bank/account/deposit
+Content-Type: application/json
+
+{
+  "id": "e69798e0-a964-4ca5-b526-ad0eb9f00896",
+  "amount": 1
+}
+
+###
+POST http://localhost:8000/bank/account/withdraw
+Content-Type: application/json
+
+{
+  "id": "e69798e0-a964-4ca5-b526-ad0eb9f00896",
+  "amount": 1
+}
