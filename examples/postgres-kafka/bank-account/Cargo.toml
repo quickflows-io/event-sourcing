@@ -6,9 +6,9 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-event-sourcing = { path= "../../../event-sourcing" }
-event-store-postgres = { path= "../../../event-store-postgres" }
-event-stream-kafka = { path= "../../../event-stream-kafka" }
+event-sourcing = { git = "https://github.com/benjaminjacobberg/event-sourcing-rs" }
+event-store-postgres = { git = "https://github.com/benjaminjacobberg/event-sourcing-rs" }
+event-stream-kafka = { git = "https://github.com/benjaminjacobberg/event-sourcing-rs" }
 
 rocket = { version = "0.5.0-rc.2", features = ["serde_json", "uuid", "json"] }
 kafka = "0.9"
