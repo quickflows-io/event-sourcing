@@ -1,0 +1,50 @@
+services:
+  scylla:
+    image: scylladb/scylla:latest
+    container_name: scylla
+    restart: always
+    ports:
+      - 9042:9042
+      - 10000:10000
+  kafka:
+    image: bitnami/kafka:3.1.2
+    container_name: kafka
+    hostname: kafka
+    restart: always
+    environment:
+      - KAFKA_ENABLE_KRAFT=yes
+      - KAFKA_CFG_PROCESS_ROLES=broker,controller
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,PLAINTEXT_EXTERNAL://:9094
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_EXTERNAL:PLAINTEXT
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,PLAINTEXT_EXTERNAL://localhost:9092
+      - KAFKA_BROKER_ID=1
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@127.0.0.1:9093
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    ports:
+      - 9092:9094
+  kafka-connect:
+    image: bitnami/kafka:3.1.2
+    container_name: kafka-connect
+    hostname: kafka-connect
+    entrypoint: [ "/opt/bitnami/kafka/bin/connect-distributed.sh", "/config/worker.properties" ]
+    restart: always
+    ports:
+      - 8083:8083
+      - 9001:9001
+    volumes:
+      - ./connect/config/:/config/:Z
+      - ./connect/plugins/:/plugins/:Z
+    depends_on:
+      - kafka
+  console:
+    image: vectorized/console:latest
+    container_name: console
+    hostname: console
+    restart: always
+    environment:
+      CONFIG_FILEPATH: /config/console-config.yaml
+    ports:
+      - 8080:8080
+    volumes:
+      - ./console:/config:Z

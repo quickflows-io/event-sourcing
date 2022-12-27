@@ -1,0 +1,26 @@
+###
+POST http://localhost:8000/api/v1/open
+Content-Type: application/json
+
+{
+  "name": "A Name"
+}
+
+> {% client.global.set("aggregate_id", response.body.aggregate_id); %}
+
+###
+POST http://localhost:8000/api/v1/deposit/{{aggregate_id}}
+Content-Type: application/json
+
+{
+  "amount": 1
+}
+
+###
+POST http://localhost:8000/api/v1/withdraw/{{aggregate_id}}
+Content-Type: application/json
+
+{
+  "amount": 1
+}
+

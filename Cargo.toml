@@ -1,8 +1,7 @@
 [workspace]
 members = [
+    "examples/bankaccount",
     "event-sourcing",
-    "event-store-inmemory",
-    "event-store-postgres",
-    "event-stream-kafka",
-    "examples/postgres-kafka/bank-account"
+    "event-store-scylladb",
+    "event-bus-kafka",
 ]

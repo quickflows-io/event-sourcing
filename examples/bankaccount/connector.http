@@ -1,0 +1,27 @@
+### Setup Kafka Connector for reading Scylla's CDC table
+POST http://localhost:8083/connectors
+Content-Type: application/json
+
+{
+  "name": "ScyllaCDCSourceConnector",
+  "config": {
+    "connector.class": "com.scylladb.cdc.debezium.connector.ScyllaConnector",
+    "errors.retry.delay.max.ms": 100,
+    "errors.retry.timeout": "-1",
+    "errors.tolerance": "all",
+    "name": "ScyllaCDCSourceConnector",
+    "cleanup.policy": "compact",
+    "scylla.cluster.ip.addresses": "scylla:9042",
+    "scylla.confidence.window.size": "500",
+    "scylla.query.time.window.size": "500",
+    "scylla.consistency.level": "ALL",
+    "scylla.table.names": "event_store.events",
+    "scylla.name": "bankaccount",
+    "transforms": "ExtractField,ScyllaExtractNewRecordState",
+    "transforms.ScyllaExtractNewRecordState.field": "after",
+    "transforms.ScyllaExtractNewRecordState.type": "com.scylladb.cdc.debezium.connector.transforms.ScyllaExtractNewRecordState",
+    "transforms.ExtractField.field": "after",
+    "transforms.ExtractField.type": "org.apache.kafka.connect.transforms.ExtractField$Value",
+    "tasks.max": 1
+  }
+}

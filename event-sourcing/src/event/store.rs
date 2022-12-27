@@ -1,16 +1,26 @@
+use crate::Error;
+
 use crate::event::envelope::EventEnvelope;
-use serde::de::DeserializeOwned;
-use serde::Serialize;
-use std::error::Error;
+use crate::event::Event;
+use custom_error::custom_error;
+
+custom_error! {pub EventStoreError
+    Concurrency = "concurrency error",
+}
 
 #[async_trait::async_trait]
-pub trait EventStore: Sized + Send + Sync + Clone {
-    async fn read<Data: Send + Sync + Clone + Serialize + DeserializeOwned>(
+pub trait EventStore<E>: Sized + Send + Sync + Clone
+where
+    E: Event,
+{
+    // Fetch all events for the aggregate.
+    async fn read(&self, aggregate_id: &String) -> Result<Vec<EventEnvelope<E>>, Error>;
+    // Fetch all events on and after the specified event_time for the aggregate.
+    async fn read_from(
         &self,
         aggregate_id: &String,
-    ) -> Result<Vec<EventEnvelope<Data>>, Box<dyn Error + Send + Sync>>;
-    async fn persist<Data: Send + Sync + Clone + Serialize + DeserializeOwned>(
-        &self,
-        event_envelope: EventEnvelope<Data>,
-    ) -> Result<(), Box<dyn Error + Send + Sync>>;
+        sequence: i64,
+    ) -> Result<Vec<EventEnvelope<E>>, Error>;
+    // Persist the event for the aggregate.
+    async fn persist(&self, event_envelope: &EventEnvelope<E>) -> Result<(), Error>;
 }

@@ -15,6 +15,7 @@ serde_json = "1.0"
 serde_derive = "1.0"
 derive-new = "0.5"
 derive_more = "0.99"
+custom_error = "1.9"
 
 [dev-dependencies]
 tokio = { version = "1.20", features = ["macros", "rt-multi-thread"] }
