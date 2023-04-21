@@ -15,4 +15,4 @@ chrono = { version = "0.4", features = ["serde"] }
 log = "0.4"
 retry = "2"
 futures = "0.3"
-scylla = "0.7"
+scylla = "0.8"
